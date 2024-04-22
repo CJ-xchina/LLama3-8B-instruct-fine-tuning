@@ -64,14 +64,12 @@ def copy_directory_contents(src_dir, dst_dir=None):
 
 # 定义命令和参数
 command = "python"
-script_path = "../script/mistral_api_server.py"
+script_path = "../script/.py"
 
 base_model_option = "--base_model"
 lora_model_option = "--lora_model"
-base_model = "/result/Mistral-7B-instruct-v4/final_model"
+base_model = model_utils.get_model_file_path()
 
-copy_directory_contents('/result','/result_c')
-list_files_and_directories('/result')
 
 gpus_option = "--gpus"
 
@@ -96,5 +94,3 @@ try:
     print("命令输出:", result.stdout)
 except subprocess.CalledProcessError as e:
     print("命令执行出错:", e.stderr)
-
-list_files_and_directories('/result')
