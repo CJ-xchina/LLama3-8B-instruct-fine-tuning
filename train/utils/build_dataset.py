@@ -10,6 +10,8 @@ def build_dataset(data_path,
     def tokenize(batch):
         # 处理整个批次的数据
         new_prompts = [
+            f"<|begin_of_text|><|start_header_id|>user<|end_header_id|> Here are the inputs: {input_item} <|eot_id|> <|start_header_id|>assistant<end_header_id>\n {output_item}"
+
             f"<s>[INST] Here are the inputs: {input_item} [/INST] \n {output_item} </s>"
             for input_item, output_item in zip(batch['input'], batch['output'])
         ]
