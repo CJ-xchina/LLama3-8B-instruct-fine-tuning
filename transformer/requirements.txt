@@ -1,4 +1,4 @@
-iscasmodel==0.31
+iscasmodel==0.32
 datasets==2.16.0
 fastapi==0.110.1
 peft==0.10.0
