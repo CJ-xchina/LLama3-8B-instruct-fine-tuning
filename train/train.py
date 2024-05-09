@@ -46,7 +46,7 @@ tokenizer_path = model_path = model_utils.get_model_file_path()  # 模型路径
 output_dir = model_utils.get_model_output_path() # 合并后模型输出路径
 
 print(f"model_path is : {model_path}")
-
+print(f"output dir is : {output_dir}")
 # lora 配置
 lr = 1e-4
 lora_rank = 64
