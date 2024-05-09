@@ -42,8 +42,8 @@ deepspeed_config_file = "ds_zero2_no_offload.json"
 additional_path = "models--mistralai--Mistral-7B-Instruct-v0.2/snapshots/41b61a33a2483885c981aa79e0df6b32407ed873"
 tokenizer_path = model_path = model_utils.get_model_file_path()  # 模型路径
 # tokenizer_path = model_path = '/result/Mistral-7B-final-v4'
-output_dir = "/result/LLama3-8B/lora"  # lora模型输出路径
-output_model_final = model_utils.get_model_output_path() # 合并后模型输出路径
+# output_dir = "/result/LLama3-8B/lora"  # lora模型输出路径
+output_dir = model_utils.get_model_output_path() # 合并后模型输出路径
 
 print(f"model_path is : {model_path}")
 
