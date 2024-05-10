@@ -2,9 +2,6 @@ import os
 import subprocess
 import sys
 
-from peft import PeftModel
-from transformers import AutoModelForCausalLM, AutoTokenizer
-
 from utils.build_dataset import split_data
 
 os.environ['HF_ENDPOINT'] = 'https://hf-mirror.com'
@@ -43,10 +40,29 @@ additional_path = "models--mistralai--Mistral-7B-Instruct-v0.2/snapshots/41b61a3
 tokenizer_path = model_path = model_utils.get_model_file_path()  # 模型路径
 # tokenizer_path = model_path = '/result/Mistral-7B-final-v4'
 # output_dir = "/result/LLama3-8B/lora"  # lora模型输出路径
-output_dir = model_utils.get_model_output_path() # 合并后模型输出路径
+output_dir = model_utils.get_model_output_path()  # 合并后模型输出路径
 
 print(f"model_path is : {model_path}")
 print(f"output dir is : {output_dir}")
+
+
+def list_files_and_directories(start_path, indent=0):
+    prefix = ' ' * indent
+    if indent == 0:
+        print(f"{prefix}根目录: {start_path}")
+    else:
+        print(f"{prefix}目录: {start_path}")
+
+    for item in os.listdir(start_path):
+        path = os.path.join(start_path, item)
+        if os.path.isdir(path):
+            list_files_and_directories(path, indent + 4)  # 增加缩进显示子目录
+        else:
+            print(f"{prefix}    文件: {item}")
+
+
+list_files_and_directories(start_path=model_path)
+
 # lora 配置
 lr = 1e-4
 lora_rank = 64
