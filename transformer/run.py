@@ -30,7 +30,7 @@ script_path = "../script/llama3_api_server.py"
 
 base_model_option = "--base_model"
 lora_model_option = "--lora_model"
-base_model = model_utils.get_model_output_path()
+base_model = os.path.join(model_utils.get_model_output_path(), "final_model")
 
 
 gpus_option = "--gpus"
