@@ -205,10 +205,10 @@ def predict(
     # else:
     #     prompt = generate_chat_prompt(input)
 
-    # messages = [
-    #     {"role": "system", "content": "You are a pirate chatbot who always responds in pirate speak!"},
-    #     {"role": "user", "content": f"{input}"},
-    # ]
+    messages = [
+        {"role": "system", "content": "You are a pirate chatbot who always responds in pirate speak!"},
+        {"role": "user", "content": f"{input}"},
+    ]
     #
     # input_ids = tokenizer.apply_chat_template(
     #     messages,
@@ -246,10 +246,10 @@ def predict(
     #
     # # output = output.split("[/INST]")[-1].strip()
     # return output
-    messages = [
-        {"role": "system", "content": "You are a pirate chatbot who always responds in pirate speak!"},
-        {"role": "user", "content": "Who are you?"},
-    ]
+    # messages = [
+    #     {"role": "system", "content": "You are a pirate chatbot who always responds in pirate speak!"},
+    #     {"role": "user", "content": "Who are you?"},
+    # ]
 
     input_ids = tokenizer.apply_chat_template(
         messages,
