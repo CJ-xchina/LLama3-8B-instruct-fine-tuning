@@ -216,10 +216,6 @@ def predict(
         return_tensors="pt"
     ).to(device)
 
-    print(f"changdu {len(input_ids)}")
-    print(f"222 {tokenizer.pad_token_id}")
-    attention_mask = input_ids.ne(tokenizer.pad_token_id)
-
     generation_config = GenerationConfig(
         temperature=temperature,
         top_p=top_p,
@@ -241,10 +237,8 @@ def predict(
     with torch.no_grad():
         generation_output = model.generate(
             input_ids=input_ids,
-            attention_mask=attention_mask,
             generation_config=generation_config,
             eos_token_id=terminators,
-            pad_token_id=tokenizer.pad_token_id
         )
     response = generation_output[0][input_ids.shape[-1]:]
     output = tokenizer.decode(response, skip_special_tokens=True)
