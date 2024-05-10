@@ -217,6 +217,7 @@ def predict(
     ).to(device)
 
     print(f"changdu {len(input_ids)}")
+    print(f"222 {tokenizer.pad_token_id}")
     attention_mask = input_ids.ne(tokenizer.pad_token_id)
 
     generation_config = GenerationConfig(
