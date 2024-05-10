@@ -205,47 +205,74 @@ def predict(
     # else:
     #     prompt = generate_chat_prompt(input)
 
+    # messages = [
+    #     {"role": "system", "content": "You are a pirate chatbot who always responds in pirate speak!"},
+    #     {"role": "user", "content": f"{input}"},
+    # ]
+    #
+    # input_ids = tokenizer.apply_chat_template(
+    #     messages,
+    #     add_generation_prompt=True,
+    #     return_tensors="pt"
+    # ).to(device)
+    #
+    # generation_config = GenerationConfig(
+    #     temperature=temperature,
+    #     top_p=top_p,
+    #     top_k=top_k,
+    #     num_beams=num_beams,
+    #     do_sample=do_sample,
+    #     **kwargs,
+    # )
+    #
+    # terminators = [
+    #     tokenizer.eos_token_id,
+    #     tokenizer.convert_tokens_to_ids("<|eot_id|>")
+    # ]
+    #
+    # generation_config.return_dict_in_generate = True
+    # generation_config.output_scores = False
+    # generation_config.max_new_tokens = max_new_tokens
+    # generation_config.repetition_penalty = float(repetition_penalty)
+    # with torch.no_grad():
+    #     generation_output = model.generate(
+    #         input_ids=input_ids,
+    #         generation_config=generation_config,
+    #         eos_token_id=terminators,
+    #     )
+    # response = generation_output[0][input_ids.shape[-1]:]
+    # output = tokenizer.decode(response, skip_special_tokens=True)
+    # print(f"model output ： {output}")
+    #
+    # # output = output.split("[/INST]")[-1].strip()
+    # return output
     messages = [
         {"role": "system", "content": "You are a pirate chatbot who always responds in pirate speak!"},
-        {"role": "user", "content": f"{input}"},
+        {"role": "user", "content": "Who are you?"},
     ]
 
     input_ids = tokenizer.apply_chat_template(
         messages,
         add_generation_prompt=True,
         return_tensors="pt"
-    ).to(device)
-
-    generation_config = GenerationConfig(
-        temperature=temperature,
-        top_p=top_p,
-        top_k=top_k,
-        num_beams=num_beams,
-        do_sample=do_sample,
-        **kwargs,
-    )
+    ).to(model.device)
 
     terminators = [
         tokenizer.eos_token_id,
         tokenizer.convert_tokens_to_ids("<|eot_id|>")
     ]
 
-    generation_config.return_dict_in_generate = True
-    generation_config.output_scores = False
-    generation_config.max_new_tokens = max_new_tokens
-    generation_config.repetition_penalty = float(repetition_penalty)
-    with torch.no_grad():
-        generation_output = model.generate(
-            input_ids=input_ids,
-            generation_config=generation_config,
-            eos_token_id=terminators,
-        )
-    response = generation_output[0][input_ids.shape[-1]:]
-    output = tokenizer.decode(response, skip_special_tokens=True)
-    print(f"model output ： {output}")
-
-    # output = output.split("[/INST]")[-1].strip()
-    return output
+    outputs = model.generate(
+        input_ids,
+        max_new_tokens=256,
+        eos_token_id=terminators,
+        do_sample=True,
+        temperature=0.6,
+        top_p=0.9,
+    )
+    response = outputs[0][input_ids.shape[-1]:]
+    print(tokenizer.decode(response, skip_special_tokens=True))
+    return tokenizer.decode(response, skip_special_tokens=True)
 
 
 def stream_predict(
