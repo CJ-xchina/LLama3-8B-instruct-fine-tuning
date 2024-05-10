@@ -210,11 +210,11 @@ def predict(
         {"role": "user", "content": f"{input}"},
     ]
     #
-    # input_ids = tokenizer.apply_chat_template(
-    #     messages,
-    #     add_generation_prompt=True,
-    #     return_tensors="pt"
-    # ).to(device)
+    input_ids = tokenizer.apply_chat_template(
+        messages,
+        add_generation_prompt=True,
+        return_tensors="pt"
+    ).to(device)
     #
     # generation_config = GenerationConfig(
     #     temperature=temperature,
@@ -225,10 +225,10 @@ def predict(
     #     **kwargs,
     # )
     #
-    # terminators = [
-    #     tokenizer.eos_token_id,
-    #     tokenizer.convert_tokens_to_ids("<|eot_id|>")
-    # ]
+    terminators = [
+        tokenizer.eos_token_id,
+        tokenizer.convert_tokens_to_ids("<|eot_id|>")
+    ]
     #
     # generation_config.return_dict_in_generate = True
     # generation_config.output_scores = False
@@ -251,24 +251,16 @@ def predict(
     #     {"role": "user", "content": "Who are you?"},
     # ]
 
-    input_ids = tokenizer.apply_chat_template(
-        messages,
-        add_generation_prompt=True,
-        return_tensors="pt"
-    ).to(model.device)
-
-    terminators = [
-        tokenizer.eos_token_id,
-        tokenizer.convert_tokens_to_ids("<|eot_id|>")
-    ]
-
     outputs = model.generate(
         input_ids,
-        max_new_tokens=256,
+        max_new_tokens=max_new_tokens,
         eos_token_id=terminators,
-        do_sample=True,
-        temperature=0.6,
-        top_p=0.9,
+        do_sample=do_sample,
+        temperature=temperature,
+        top_p=top_p,
+        top_k=top_k,
+        num_beams=num_beams,
+        repetition_penalty=repetition_penalty
     )
     response = outputs[0][input_ids.shape[-1]:]
     print(tokenizer.decode(response, skip_special_tokens=True))
