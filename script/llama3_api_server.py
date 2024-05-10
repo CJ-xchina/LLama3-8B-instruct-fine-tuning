@@ -216,6 +216,7 @@ def predict(
         return_tensors="pt"
     ).to(device)
 
+    print(f"changdu {len(input_ids)}")
     attention_mask = input_ids.ne(tokenizer.pad_token_id)
 
     generation_config = GenerationConfig(
