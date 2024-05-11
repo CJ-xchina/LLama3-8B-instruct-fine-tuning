@@ -564,7 +564,7 @@ def main():
     # Check if the current instance should merge the model
     if ips.index(model_utils.get_name()) == 0:
         lora_output_path = os.path.join(training_args.output_dir, "sft_lora_model")
-        output_model_final = os.path.join(training_args.output_dir, "final_model")
+        output_model_final = os.path.join(training_args.output_dir, "final_model_hug")
 
         print(f'start merging base_model: {model_args.model_name_or_path} with the peft_model: {lora_output_path}')
 
