@@ -62,6 +62,8 @@ from iscasmodel.core import FLOAT16
 
 require_version("datasets>=1.8.0", "To fix: pip install -r examples/pytorch/language-modeling/requirements.txt")
 
+lora_suffix = "sft_lora_hug_model"
+final_suffix = "final_model_hug"
 import os
 import time
 import torch
@@ -92,11 +94,11 @@ class SavePeftModelCallback(transformers.TrainerCallback):
 
     def save_model(self, args, state, kwargs):
         if state.best_model_checkpoint is not None:
-            checkpoint_folder = os.path.join(state.best_model_checkpoint, "sft_lora_model")
+            checkpoint_folder = os.path.join(state.best_model_checkpoint, lora_suffix)
         else:
             checkpoint_folder = os.path.join(args.output_dir, f"{PREFIX_CHECKPOINT_DIR}-{state.global_step}")
 
-        peft_model_path = os.path.join(checkpoint_folder, "sft_lora_model")
+        peft_model_path = os.path.join(checkpoint_folder, lora_suffix)
         logger.info(f"model will be saved in {peft_model_path}")
 
         kwargs["model"].save_pretrained(peft_model_path)
@@ -108,7 +110,7 @@ class SavePeftModelCallback(transformers.TrainerCallback):
 
     def on_train_end(self, args: TrainingArguments, state, control, **kwargs):
         logger.info("train end!!! now saving!!!")
-        peft_model_path = os.path.join(args.output_dir, "sft_lora_model")
+        peft_model_path = os.path.join(args.output_dir, lora_suffix)
         kwargs["model"].save_pretrained(peft_model_path)
         kwargs["tokenizer"].save_pretrained(peft_model_path)
         list_files_and_directories('/result')
@@ -563,8 +565,8 @@ def main():
     ips = model_utils.get_ips()
     # Check if the current instance should merge the model
     if ips.index(model_utils.get_name()) == 0:
-        lora_output_path = os.path.join(training_args.output_dir, "sft_lora_model")
-        output_model_final = os.path.join(training_args.output_dir, "final_model_hug")
+        lora_output_path = os.path.join(training_args.output_dir, lora_suffix)
+        output_model_final = os.path.join(training_args.output_dir, final_suffix)
 
         print(f'start merging base_model: {model_args.model_name_or_path} with the peft_model: {lora_output_path}')
 
