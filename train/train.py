@@ -87,86 +87,63 @@ print(ips)
 model_utils.get_name()
 master_addr = ips[0]
 
-if ips.index(model_utils.get_name()) == 0:
-    lora_output_path = os.path.join(output_dir, "sft_lora_model")
-    output_model_final = os.path.join(output_dir, "final_model")
 
-    print(f'start merging base_model: {model_path} with the peft_model: {lora_output_path}')
+full_command = [
+    f"{sys.executable}",
+    "-m",
+    "torch.distributed.run",
+    f"--nnodes", f"{len(ips)}",
+    f"--nproc_per_node", f"{num_devices}",
+    f"--node_rank", f"{ips.index(model_utils.get_name())}",
+    f"--master_addr", f"{master_addr}",
+    "--master_port", "8080",
+    "run_clm_sft_with_peft.py",
+    f"--deepspeed", f"{deepspeed_config_file}",
+    f"--model_name_or_path", f"{model_path}",
+    f"--tokenizer_name_or_path", f"{tokenizer_path}",
+    f"--dataset_dir", f"{train_path}",
+    f"--per_device_train_batch_size", f"{per_device_train_batch_size}",
+    f"--per_device_eval_batch_size", f"{per_device_eval_batch_size}",
+    "--do_train",
+    "--do_eval",
+    f"--seed", "42",
+    "--fp16",
+    "--num_train_epochs", "1",
+    "--lr_scheduler_type", "cosine",
+    f"--learning_rate", f"{learning_rate}",
+    "--warmup_ratio", "0.03",
+    "--weight_decay", "0",
+    "--logging_strategy", "steps",
+    "--logging_steps", "10",
+    "--save_strategy", "steps",
+    "--save_total_limit", "5",
+    "--evaluation_strategy", "steps",
+    "--eval_steps", "200",
+    "--save_steps", "200",
+    f"--gradient_accumulation_steps", f"{gradient_accumulation_steps}",
+    f"--preprocessing_num_workers", "8",
+    f"--max_seq_length", f"{max_seq_length}",
+    f"--output_dir", f"{output_dir}",
+    "--overwrite_output_dir",
+    "--ddp_timeout", "30000",
+    "--logging_first_step", "True",
+    f"--lora_rank", f"{lora_rank}",
+    f"--lora_alpha", f"{lora_alpha}",
+    f"--trainable", f"{lora_trainable}",
+    f"--lora_dropout", f"{lora_dropout}",
+    f"--modules_to_save", f"{modules_to_save}",
+    "--torch_dtype", "float16",
+    f"--validation_file", f"{valid_file_path}",
+    "--load_in_kbits", f"{QUANTIZATION}",
+    "--save_safetensors", "False",
+    "--gradient_checkpointing",
+    "--ddp_find_unused_parameters", "False"
+]
 
-    base_model_reload = AutoModelForCausalLM.from_pretrained(
-        model_path,
-        torch_dtype=torch.bfloat16,
-        return_dict=True,
-        low_cpu_mem_usage=True,
-        device_map="auto",
-        trust_remote_code=True,
-    )
-    tokenizer = AutoTokenizer.from_pretrained(model_path)
-    model = PeftModel.from_pretrained(base_model_reload, lora_output_path)
-    model = model.merge_and_unload()
-
-    model.save_pretrained(output_model_final)
-    tokenizer.save_pretrained(output_model_final)
-
-    print(f'model successfully merged in {output_model_final} !')
-
-
-# full_command = [
-#     f"{sys.executable}",
-#     "-m",
-#     "torch.distributed.run",
-#     f"--nnodes", f"{len(ips)}",
-#     f"--nproc_per_node", f"{num_devices}",
-#     f"--node_rank", f"{ips.index(model_utils.get_name())}",
-#     f"--master_addr", f"{master_addr}",
-#     "--master_port", "8080",
-#     "run_clm_sft_with_peft.py",
-#     f"--deepspeed", f"{deepspeed_config_file}",
-#     f"--model_name_or_path", f"{model_path}",
-#     f"--tokenizer_name_or_path", f"{tokenizer_path}",
-#     f"--dataset_dir", f"{train_path}",
-#     f"--per_device_train_batch_size", f"{per_device_train_batch_size}",
-#     f"--per_device_eval_batch_size", f"{per_device_eval_batch_size}",
-#     "--do_train",
-#     "--do_eval",
-#     f"--seed", "42",
-#     "--fp16",
-#     "--num_train_epochs", "1",
-#     "--lr_scheduler_type", "cosine",
-#     f"--learning_rate", f"{learning_rate}",
-#     "--warmup_ratio", "0.03",
-#     "--weight_decay", "0",
-#     "--logging_strategy", "steps",
-#     "--logging_steps", "10",
-#     "--save_strategy", "steps",
-#     "--save_total_limit", "5",
-#     "--evaluation_strategy", "steps",
-#     "--eval_steps", "200",
-#     "--save_steps", "200",
-#     f"--gradient_accumulation_steps", f"{gradient_accumulation_steps}",
-#     f"--preprocessing_num_workers", "8",
-#     f"--max_seq_length", f"{max_seq_length}",
-#     f"--output_dir", f"{output_dir}",
-#     "--overwrite_output_dir",
-#     "--ddp_timeout", "30000",
-#     "--logging_first_step", "True",
-#     f"--lora_rank", f"{lora_rank}",
-#     f"--lora_alpha", f"{lora_alpha}",
-#     f"--trainable", f"{lora_trainable}",
-#     f"--lora_dropout", f"{lora_dropout}",
-#     f"--modules_to_save", f"{modules_to_save}",
-#     "--torch_dtype", "float16",
-#     f"--validation_file", f"{valid_file_path}",
-#     "--load_in_kbits", f"{QUANTIZATION}",
-#     "--save_safetensors", "False",
-#     "--gradient_checkpointing",
-#     "--ddp_find_unused_parameters", "False"
-# ]
-#
-# try:
-#     subprocess.run(full_command, check=True, text=True)
-# except subprocess.CalledProcessError as e:
-#     print("Error occurred:", e)
-#     print("Return code:", e.returncode)
-#     print("Command run:", ' '.join(e.cmd))
-#     print("Error output:", e.stderr)
+try:
+    subprocess.run(full_command, check=True, text=True)
+except subprocess.CalledProcessError as e:
+    print("Error occurred:", e)
+    print("Return code:", e.returncode)
+    print("Command run:", ' '.join(e.cmd))
+    print("Error output:", e.stderr)
