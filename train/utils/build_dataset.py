@@ -17,7 +17,7 @@ def build_dataset(data_path,
         new_prompts = [
             f"<|begin_of_text|><|start_header_id|>system<|end_header_id|>You are a serious expert in the field of Kubernetes and use what you have learnt to be able to ask and answer all Kubernetes questions in an expert tone!<|eot_id|>" \
             f"<|start_header_id|>user<|end_header_id|> {input_item} <|eot_id|> " \
-            f"<|start_header_id|>assistant<|end_header_id>\n {output_item}<|eot_id|>"
+            f"<|start_header_id|>assistant<|end_header_id> {output_item}<|eot_id|>"
 
             for input_item, output_item in zip(batch['input'], batch['output'])
         ]
