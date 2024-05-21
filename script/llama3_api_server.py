@@ -206,7 +206,7 @@ def predict(
     #     prompt = generate_chat_prompt(input)
 
     messages = [
-        {"role": "system", "content": "You are a pirate chatbot who always responds in pirate speak!"},
+        {"role": "system", "content": "You are a serious expert in the field of Kubernetes and use what you have learnt to be able to ask and answer all Kubernetes questions in an expert tone!"},
         {"role": "user", "content": f"{input}"},
     ]
     #
