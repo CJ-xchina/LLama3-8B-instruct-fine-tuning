@@ -2,9 +2,6 @@ import os
 import subprocess
 import sys
 
-from peft import PeftModel
-from transformers import AutoModelForCausalLM, AutoTokenizer
-
 from utils.build_dataset import split_data
 
 os.environ['HF_ENDPOINT'] = 'https://hf-mirror.com'
@@ -40,7 +37,7 @@ max_seq_length = 512
 model_id = "mistralai/Mistral-7B-Instruct-v0.2"  # model's huggingface id
 deepspeed_config_file = "ds_zero2_no_offload.json"
 additional_path = "models--mistralai--Mistral-7B-Instruct-v0.2/snapshots/41b61a33a2483885c981aa79e0df6b32407ed873"
-tokenizer_path = model_path = model_utils.get_model_file_path()  # 模型路径
+tokenizer_path = model_path = os.path.join(model_utils.get_model_file_path(), "final_model_hug")  # 模型路径
 # tokenizer_path = model_path = '/result/Mistral-7B-final-v4'
 # output_dir = "/result/LLama3-8B/lora"  # lora模型输出路径
 output_dir = model_utils.get_model_output_path()  # 合并后模型输出路径
@@ -86,7 +83,6 @@ ips = model_utils.get_ips()
 print(ips)
 model_utils.get_name()
 master_addr = ips[0]
-
 
 full_command = [
     f"{sys.executable}",
