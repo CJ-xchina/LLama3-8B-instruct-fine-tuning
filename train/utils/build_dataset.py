@@ -51,9 +51,6 @@ def build_dataset(data_path,
             processed_dataset = tokenized_dataset
         processed_dataset.set_format('torch')
         all_datasets.append(processed_dataset['train'])
-    print(f"inputs_ids 长度:{processed_dataset['train'][0]['input_ids']}")
-    print(f"inputs_ids 长度:{processed_dataset['train'][0]['attention_mask']}")
-    print(f"数据长度:{len(processed_dataset['train'])}")
     all_datasets = concatenate_datasets(all_datasets)
     return all_datasets
 
