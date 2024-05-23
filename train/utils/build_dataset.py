@@ -12,6 +12,8 @@ def build_dataset(data_path,
                   max_seq_length: int, data_cache_dir=None,
                   preprocessing_num_workers=None,
                   ):
+    global processed_dataset
+
     def tokenize(batch):
         # 处理整个批次的数据
         new_prompts = [
@@ -37,7 +39,7 @@ def build_dataset(data_path,
         data_path = [data_path]
     for file in data_path:
         try:
-            processed_dataset = datasets.load_from_disk('./')
+            processed_dataset = datasets.load_from_disk('./cuijiexiang666')
         except Exception:
             raw_dataset = load_dataset("json", data_files=file)
             tokenized_dataset = raw_dataset.map(
