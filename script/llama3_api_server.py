@@ -204,12 +204,14 @@ def predict(
     #     prompt = generate_completion_prompt(input)
     # else:
     #     prompt = generate_chat_prompt(input)
+    if isinstance(input, str):
+        messages = [
+            {"role": "system", "content": "You are a serious expert in the field of Kubernetes and use what you have learnt to be able to ask and answer all Kubernetes questions in an expert tone!"},
+            {"role": "user", "content": f"{input}"},
+        ]
+    else:
+        messages = input
 
-    messages = [
-        {"role": "system", "content": "You are a serious expert in the field of Kubernetes and use what you have learnt to be able to ask and answer all Kubernetes questions in an expert tone!"},
-        {"role": "user", "content": f"{input}"},
-    ]
-    #
     input_ids = tokenizer.apply_chat_template(
         messages,
         add_generation_prompt=True,
