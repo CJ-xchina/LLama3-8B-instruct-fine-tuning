@@ -38,6 +38,7 @@ def build_dataset(data_path,
     print("Porcessing the Data!")
     if not isinstance(data_path, (list, tuple)):
         data_path = [data_path]
+    print(data_path)
     for file in data_path:
         try:
             processed_dataset = datasets.load_from_disk('./cuijiexiang666')
