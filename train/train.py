@@ -29,8 +29,8 @@ train_path, valid_file_path = split_data(base_resource_path, 0.05)
 
 # 训练配置
 QUANTIZATION = 16  # DEFINE QUANTIZATION HERE. Choose from (16 | 8 | 4)
-per_device_train_batch_size = 8
-per_device_eval_batch_size = 8
+per_device_train_batch_size = 16
+per_device_eval_batch_size = 16
 learning_rate = 2e-4
 gradient_accumulation_steps = 8
 max_seq_length = 512
