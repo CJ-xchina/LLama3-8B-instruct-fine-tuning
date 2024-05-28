@@ -24,7 +24,7 @@ else:
 # huggingface_hub.login("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", add_to_git_credential=True)
 # 读取数据并划分训练集与验证集
 model_utils = ModelUtils()
-base_resource_path = model_utils.get_dataset_path()
+base_resource_path = os.path.join(model_utils.get_dataset_path(), "k8s")
 train_path, valid_file_path = split_data(base_resource_path, 0.05)
 
 # 训练配置
