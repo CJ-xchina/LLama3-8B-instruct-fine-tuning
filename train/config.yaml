@@ -1,0 +1,50 @@
+# 环境变量配置
+hf_endpoint: "https://hf-mirror.com"  # Hugging Face 镜像站点
+cuda_launch_blocking: "1"  # CUDA Launch Blocking 设置
+
+# 训练配置
+quantization: 16  # 量化级别
+per_device_train_batch_size: 16  # 每个设备的训练批次大小
+per_device_eval_batch_size: 16  # 每个设备的评估批次大小
+learning_rate: 2e-4  # 学习率
+gradient_accumulation_steps: 8  # 梯度累积步数
+max_seq_length: 512  # 最大序列长度
+model_id: "mistralai/Mistral-7B-Instruct-v0.2"  # 模型的 Hugging Face ID
+deepspeed_config_file: "ds_zero2_no_offload.json"  # DeepSpeed 配置文件
+model_additional_path: "models--mistralai--Mistral-7B-Instruct-v0.2/snapshots/41b61a33a2483885c981aa79e0df6b32407ed873"  # 额外模型路径
+dataset_additional_path: "k8s" # 额外的训练集路径
+dataset_split_ratio : 0.1 # 多少比例的数据集将会被作为验证集
+
+
+# LoRA 配置
+lora:
+  lr: 1e-4  # LoRA 学习率
+  rank: 64  # LoRA Rank
+  alpha: 128  # LoRA Alpha
+  trainable: "q_proj,v_proj,k_proj,o_proj,gate_proj,down_proj,up_proj"  # 可训练的模块
+  modules_to_save: "embed_tokens,lm_head"  # 需要保存的模块
+  dropout: 0.1  # LoRA Dropout
+
+# 训练参数
+training_params:
+  seed: 42  # 随机种子
+  fp16: true  # 是否使用 16 位浮点数
+  num_train_epochs: 1  # 训练周期数
+  lr_scheduler_type: "cosine"  # 学习率调度类型
+  warmup_ratio: 0.03  # 预热比例
+  weight_decay: 0  # 权重衰减
+  logging_strategy: "steps"  # 日志记录策略
+  logging_steps: 10  # 日志记录步数
+  save_strategy: "steps"  # 模型保存策略
+  save_total_limit: 5  # 模型保存总限制
+  evaluation_strategy: "steps"  # 评估策略
+  eval_steps: 200  # 评估步数
+  save_steps: 200  # 保存步数
+  preprocessing_num_workers: 8  # 预处理的工作线程数
+  ddp_timeout: 30000  # DDP 超时时间
+  logging_first_step: true  # 记录第一个步骤
+  torch_dtype: "float16"  # Torch 数据类型
+  load_in_kbits: 16  # 以 kbits 加载
+  save_safetensors: false  # 是否保存安全张量
+  gradient_checkpointing: true  # 梯度检查点
+  ddp_find_unused_parameters: false  # DDP 查找未使用的参数
