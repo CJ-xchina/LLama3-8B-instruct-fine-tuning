@@ -35,12 +35,14 @@ def build_dataset(data_path,
 
     all_datasets = []
 
+    print("Porcessing the Data!")
     if not isinstance(data_path, (list, tuple)):
         data_path = [data_path]
     for file in data_path:
         try:
             processed_dataset = datasets.load_from_disk('./cuijiexiang666')
         except Exception:
+            print(f"file path :{file}")
             raw_dataset = load_dataset("json", data_files=file)
             tokenized_dataset = raw_dataset.map(
                 tokenize,
