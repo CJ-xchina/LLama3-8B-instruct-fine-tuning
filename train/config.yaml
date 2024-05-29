@@ -11,8 +11,8 @@ gradient_accumulation_steps: 8  # 梯度累积步数
 max_seq_length: 512  # 最大序列长度
 model_id: "mistralai/Mistral-7B-Instruct-v0.2"  # 模型的 Hugging Face ID
 deepspeed_config_file: "ds_zero2_no_offload.json"  # DeepSpeed 配置文件
-model_additional_path: "models--mistralai--Mistral-7B-Instruct-v0.2/snapshots/41b61a33a2483885c981aa79e0df6b32407ed873"  # 额外模型路径
-dataset_additional_path: "k8s" # 额外的训练集路径
+model_additional_path: "final_model_hug"  # 额外模型路径
+dataset_additional_path: "train_odd" # 额外的训练集路径
 dataset_split_ratio : 0.1 # 多少比例的数据集将会被作为验证集
 
 
