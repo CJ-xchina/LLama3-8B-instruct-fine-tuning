@@ -238,7 +238,10 @@ def split_data(dataset_dir, split_ratio):
     # 遍历原数据目录中的所有json文件
     total_train_count = 0
     total_eval_count = 0
+
+    print(f"split data in path:{dataset_dir}")
     for filename in os.listdir(dataset_dir):
+        print(f"split file :{dataset_dir}")
         if filename.endswith('.json') and not filename.startswith('.'):
             file_path = os.path.join(dataset_dir, filename)
             with open(file_path, 'r', encoding='utf-8') as file:
