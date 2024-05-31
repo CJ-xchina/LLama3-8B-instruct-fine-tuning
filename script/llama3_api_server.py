@@ -364,6 +364,7 @@ app.add_middleware(
 )
 
 
+# openai api 风格接口
 @app.post("/v1/chat/completions")
 async def create_chat_completion(request: ChatCompletionRequest):
     """Creates a completion for the chat message"""

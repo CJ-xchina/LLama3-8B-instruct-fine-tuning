@@ -7,19 +7,19 @@ from pydantic import BaseModel, Field
 
 
 class ChatCompletionRequest(BaseModel):
-    model: str = "Meta-Llama-3-8B-Instruct"
-    messages: Union[str, List[Dict[str, str]]]
-    temperature: Optional[float] = 0.2
-    top_p: Optional[float] = 0.9
-    top_k: Optional[int] = 40
-    n: Optional[int] = 1
-    max_tokens: Optional[int] = 512
-    num_beams: Optional[int] = 1
-    stop: Optional[Union[str, List[str]]] = None
-    stream: Optional[bool] = False
-    repetition_penalty: Optional[float] = 1.1
-    user: Optional[str] = None
-    do_sample: Optional[bool] = True
+    model: str = "Meta-Llama-3-8B-Instruct"  # 模型名称
+    messages: Union[str, List[Dict[str, str]]] = []  # 消息列表或单条消息
+    temperature: Optional[float] = 0.2  # 控制生成文本的多样性
+    top_p: Optional[float] = 0.9  # nucleus sampling 的概率阈值
+    top_k: Optional[int] = 40  # top-k 采样
+    n: Optional[int] = 1  # 生成的响应数量
+    max_tokens: Optional[int] = 512  # 生成的最大 token 数
+    num_beams: Optional[int] = 1  # beam search 的束数
+    stop: Optional[Union[str, List[str]]] = None  # 停止生成的标记
+    stream: Optional[bool] = False  # 是否流式输出
+    repetition_penalty: Optional[float] = 1.1  # 重复惩罚
+    user: Optional[str] = None  # 用户标识
+    do_sample: Optional[bool] = True  # 是否进行采样生成
 
 
 class ChatMessage(BaseModel):
