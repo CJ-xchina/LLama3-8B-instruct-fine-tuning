@@ -122,9 +122,9 @@ full_command = [
     f"--torch_dtype", f"{training_params['torch_dtype']}",
     f"--validation_file", f"{valid_file_path}",
     "--load_in_kbits", f"{QUANTIZATION}",
-    "--save_safetensors" if training_params['save_safetensors'] else "",
-    "--gradient_checkpointing" if training_params['gradient_checkpointing'] else "",
-    "--ddp_find_unused_parameters" if training_params['ddp_find_unused_parameters'] else ""
+    "--save_safetensors" f"{training_params['save_safetensors']}",
+    f"--gradient_checkpointing", f"{training_params['gradient_checkpointing']}",
+    "--ddp_find_unused_parameters" f"{training_params['ddp_find_unused_parameters']}"
 ]
 
 try:
