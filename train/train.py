@@ -4,7 +4,7 @@ import sys
 
 import yaml
 
-from utils.build_dataset import split_data
+from utils.build_dataset import split_data, manage_files
 
 # 读取配置文件
 with open("config.yaml", 'r') as file:
@@ -34,7 +34,6 @@ model_utils = ModelUtils()
 dataset_additional_path = config['dataset_additional_path']
 dataset_split_ratio = config['dataset_split_ratio']
 base_resource_path = os.path.join(model_utils.get_dataset_path(), dataset_additional_path)
-train_path, valid_file_path = split_data(base_resource_path, dataset_split_ratio)
 
 # 训练配置
 QUANTIZATION = config['quantization']
@@ -51,6 +50,10 @@ output_dir = model_utils.get_model_output_path()
 
 print(f"model_path is : {model_path}")
 print(f"output dir is : {output_dir}")
+
+# 检查数据路径
+manage_files(base_resource_path, model_path, os.path.join(output_dir, "base"))
+train_path, valid_file_path = split_data(base_resource_path, dataset_split_ratio)
 
 # lora 配置
 lora_params = config['lora']

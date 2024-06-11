@@ -1,6 +1,7 @@
 import json
 import os
 import random
+import shutil
 
 import datasets
 from datasets import load_dataset, concatenate_datasets
@@ -276,6 +277,28 @@ def split_data(dataset_dir, split_ratio):
 
     # 返回训练目录和验证文件的绝对路径
     return os.path.abspath(train_dir), os.path.abspath(eval_file_path)
+
+
+def manage_files(src_folder, backup_folder, target_folder):
+    """
+    Check if there are any .json or .jsonl files in the src_folder.
+    If not, copy all files from the backup_folder to the target_folder.
+    """
+    # 检查src_folder中是否存在.json或.jsonl文件
+    json_files = [f for f in os.listdir(src_folder) if f.endswith(('.json', '.jsonl'))]
+
+    if not json_files:  # 如果没有.json或.jsonl文件
+        # 确保目标文件夹存在
+        os.makedirs(target_folder, exist_ok=True)
+        # 复制backup_folder中的所有文件到target_folder
+        for file_name in os.listdir(backup_folder):
+            src_path = os.path.join(backup_folder, file_name)
+            dst_path = os.path.join(target_folder, file_name)
+            shutil.copy2(src_path, dst_path)
+        print("Files were copied from backup to target folder.")
+        raise Exception("no files found in dataset files, try to copy model file to result file")
+    else:
+        print("JSON files found in source folder. No action taken.")
 
 
 def main():
